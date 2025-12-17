@@ -1,5 +1,6 @@
 import { BotaoCustomizado } from '@/components/botaoCustomizado';
 import { InputCustomizado } from '@/components/inputCustomizado';
+import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
@@ -7,8 +8,11 @@ export function LoginScreen() {
   const [login, setLogin] = useState('');
   const [Senha, setSenha] = useState('');
 
+  const navigation = useNavigation();
+
   function logar() {
     console.log('login', login, 'Senha', Senha);
+    navigation.navigate("soma")
   }
 
   return (
