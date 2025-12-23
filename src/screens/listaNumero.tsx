@@ -2,21 +2,36 @@ import { BotaoCustomizado } from "@/components/botaoCustomizado";
 import { InputCustomizado } from "@/components/inputCustomizado";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { getData, storeData } from "utils/storage";
 
 export function ListaNumeroScreen() {
   const [item, setItem] = useState("");
   const [lista, setLista] = useState<number[]>([]);
 
-  function adicionaItem() {
+  async function adicionaItem ()  {  
     setLista([...lista, Number(item)]);
+
+    await storeData({key: "listaNumero", value: JSON.stringify([...lista, Number(item)])})
     setItem("");
   }
 
-  function limpaLista() {
+  async function limpaLista() {
     setLista([]);
-  }
 
-  return(
+    await storeData({key: "listaNumero", value: JSON.stringify([])});
+    }
+
+    async function carregaLista() {
+        const dados = await getData("listaNumero") || [];
+
+            setLista(dados);
+    }
+
+    useEffect(()=>{
+        carregaLista();
+    }, []);
+        
+   return(
     <View className="flex-1 items-center gap-4 p-3">
       <Text className="text-4xl m-3">
         Lista de itens
@@ -41,7 +56,7 @@ export function ListaNumeroScreen() {
             key={index} 
             className="text-2xl"
           >
-            {item} - {item % 2 === 0? "Par" : ""}
+            {item} - {item % 2 === 0? "Par" : "impar"}
           </Text>
         ))}
       </ScrollView>
